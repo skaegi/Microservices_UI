@@ -2,8 +2,6 @@
 
 $data = file_get_contents('php://input');
 
-$USE_EXPERIMENTAL_CACHE = false;
-
 $services = getenv("VCAP_SERVICES");
 $services_json = json_decode($services, true);
 
@@ -31,7 +29,11 @@ function httpPost($data,$url)
 	return $code;
 }
 
-if ($USE_EXPERIMENTAL_CACHE) {
+$referrer = $_SERVER['HTTP_REFERER'];
+$query = parse_url($referrer, PHP_URL_QUERY);
+$expedite = strpos($query, "expedite") == 0;
+
+if ($expedite) {
     $parsedData = json_decode($data);
     if ($parsedData->customerid % 3 == 0) {
         http_response_code(500);
