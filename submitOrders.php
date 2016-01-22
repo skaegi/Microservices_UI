@@ -2,17 +2,7 @@
 
 $data = file_get_contents('php://input');
 
-/*
- * The following error case cannot be hit under normal circumstances,
- * but will become hit 50% of the time once an error is introduced
- * during the demo to expand the user id space * 10 on the client size.
- */
-$parsedData = json_decode($data);
-if ($parsedData->customerid > 5000) {
-    http_response_code(500);
-    return;
-}
-
+$USE_EXPERIMENTAL_CACHE = false;
 
 $services = getenv("VCAP_SERVICES");
 $services_json = json_decode($services, true);
@@ -41,7 +31,14 @@ function httpPost($data,$url)
 	return $code;
 }
 
+if ($USE_EXPERIMENTAL_CACHE) {
+    $parsedData = json_decode($data);
+    if ($parsedData->customerid % 3 == 0) {
+        http_response_code(500);
+        return;
+    }
+}
+
 echo json_encode(array("httpCode" => httpPost($data,$ordersURL), "ordersURL" => $ordersURL));
 
 ?>
-
