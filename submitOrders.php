@@ -23,24 +23,12 @@ function httpPost($data,$url)
 	curl_setopt($ch, CURLOPT_POSTFIELDS, $data); 
 	curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
 	curl_setopt($ch, CURLOPT_HTTPHEADER, array('Content-Type: application/json'));
-	$output = curl_exec ($ch);
+	$output = curl_exec($ch);
 	$code = curl_getinfo($ch, CURLINFO_HTTP_CODE);
-	curl_close ($ch);
+	curl_close($ch);
 	return $code;
 }
 
-$referrer = $_SERVER['HTTP_REFERER'];
-$query = parse_url($referrer, PHP_URL_QUERY);
-$expedite = strpos($query, "expedite") == 0;
-
-if ($expedite) {
-    $parsedData = json_decode($data);
-    if ($parsedData->customerid % 3 == 0) {
-        http_response_code(500);
-        return;
-    }
-}
-
-echo json_encode(array("httpCode" => httpPost($data,$ordersURL), "ordersURL" => $ordersURL));
+echo json_encode(array("httpCode" => httpPost($data, $ordersURL), "ordersURL" => $ordersURL));
 
 ?>

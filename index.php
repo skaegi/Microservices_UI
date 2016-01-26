@@ -47,11 +47,12 @@ function orderItem(itemID){
 	//create a random customer ID and count
 	var custID = Math.floor((Math.random() * 999) + 1); 
 	var count = Math.floor((Math.random() * 9999) + 1); 
-	var myjson = {"itemid": itemID, "customerid":custID, "count":count};
-    
-    $.ajax ({
-    	type: "POST",
-    	contentType: "application/json",
+        var expedite = window.location.search.indexOf("?expedite") ? 0 : 1;
+        var myjson = {"itemid": itemID, "customerid": custID, "count": count, "expedite": expedite};
+ 
+        $.ajax({
+    	    type: "POST",
+    	    contentType: "application/json",
 	    url: "submitOrders.php",
 	    data: JSON.stringify(myjson),
 	    dataType: "json",
@@ -66,9 +67,8 @@ function orderItem(itemID){
 	    error: function(XMLHttpRequest, textStatus, errorThrown) { 
 	    	alert("Error");
         	console.log("Status: " , textStatus); console.log("Error: " , errorThrown); 
-    }  
+            }  
 	});
-
 }
 
 </script>
