@@ -1,6 +1,7 @@
 <?php
 
 $data = file_get_contents('php://input');
+
 $services = getenv("VCAP_SERVICES");
 $services_json = json_decode($services, true);
 
@@ -22,12 +23,12 @@ function httpPost($data,$url)
 	curl_setopt($ch, CURLOPT_POSTFIELDS, $data); 
 	curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
 	curl_setopt($ch, CURLOPT_HTTPHEADER, array('Content-Type: application/json'));
-	$output = curl_exec ($ch);
+	$output = curl_exec($ch);
 	$code = curl_getinfo($ch, CURLINFO_HTTP_CODE);
-	curl_close ($ch);
+	curl_close($ch);
 	return $code;
 }
 
-echo json_encode(array("httpCode" => httpPost($data,$ordersURL), "ordersURL" => $ordersURL));
+echo json_encode(array("httpCode" => httpPost($data, $ordersURL), "ordersURL" => $ordersURL));
 
 ?>
